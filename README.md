@@ -1,8 +1,8 @@
-<h1 align="center">Voluntariado Chale</h1>
-<h3 align="center">
-Webapp de gestion administrativa, para resolver la gestion de asesorias.
-</h3>
-<hr>
+<h1 align="center">GES Chale</h1>
+<h4 align="center">
+Aplicacion de gestion administrativa, para facilitar la gestion la programacion de asesorias.
+</h4>
+
 <p align="center">
   
 <img src="https://img.shields.io/npm/dy/silentlad">
