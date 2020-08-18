@@ -35,7 +35,7 @@ Aplicacion de gestion administrativa, para facilitar la programacion de asesoria
 </p>
 
 # Setup
-De ser necesario, actualizar `angular-cli` a las version 10 o mas reciente.
+Previamente tener instalado `angular-cli` para poder ejecutar comandos ng
 ```
 git clone https://github.com/Mariohuc/gschale.git
 cd gschale
