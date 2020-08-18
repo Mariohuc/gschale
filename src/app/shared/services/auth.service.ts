@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { User } from "../models/user";
 
-import { auth } from 'firebase/app';
+import { auth } from "firebase/app";
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFireDatabase } from "@angular/fire/database";
 
@@ -33,21 +33,28 @@ export class AuthService {
   }
 
   // Sign in with email/password
-  async signIn(email:any , password:any) {
-    const credential = await this.afAuth.signInWithEmailAndPassword(
-      email,
-      password
-    );
-    //this.setUserData(credential.user);
-    this.router.navigate(['/user/dashboard']);
+  signIn(email: any, password: any) {
+    return new Promise((resolve, reject) => {
+      this.afAuth
+        .signInWithEmailAndPassword(email, password)
+        .then((credential) => {
+          //this.setUserData(credential.user);
+          this.router.navigate(["/user/dashboard"]);
+          resolve();
+        })
+        .catch((error) => reject(error));
+    });
   }
 
   // Sign up with email/password
-  async signUp(user : any) {
+  async signUp(user: any) {
     const credential = await this.afAuth.createUserWithEmailAndPassword(
       user.email,
       user.password
     );
+    if (!credential.user) {
+      throw new Error("Error al crear la cuenta con este email/contraseña.");
+    }
     const newdata = Object.assign(user, credential.user);
     this.sendVerificationMail();
     //this.setNewUserData(credential.user);
@@ -55,13 +62,15 @@ export class AuthService {
   }
 
   // Reset Forggot password
-  forgotPassword(passwordResetEmail:any) {
-    return this.afAuth.sendPasswordResetEmail(passwordResetEmail)
-    .then(() => {
-      window.alert('Password reset email sent, check your inbox.');
-    }).catch((error) => {
-      window.alert(error)
-    })
+  forgotPassword(passwordResetEmail: any) {
+    return this.afAuth
+      .sendPasswordResetEmail(passwordResetEmail)
+      .then(() => {
+        window.alert("Password reset email sent, check your inbox.");
+      })
+      .catch((error) => {
+        window.alert(error);
+      });
   }
 
   /* Setting up user data when sign in with username/password,
@@ -79,23 +88,27 @@ export class AuthService {
     return itemRef.update(userData);
   } */
 
-  doesUserExist(user_uid : string) : Promise<boolean> {
-    return new Promise((resolve, reject)=>{
-      const user = this.afdb.object<User>(`/usuarios/${user_uid}`).snapshotChanges();
-      user.pipe(take(1), map(user => {
-        if(!!user){
-          resolve(true);
-        }
-        resolve(false);
-      }));
+  doesUserExist(user_uid: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const user = this.afdb
+        .object<User>(`/usuarios/${user_uid}`)
+        .snapshotChanges();
+      user.pipe(
+        take(1),
+        map((user) => {
+          if (!!user) {
+            resolve(true);
+          }
+          resolve(false);
+        })
+      );
     });
-    
   }
 
-  async setNewUserData(user:any) {
-    if( (await this.doesUserExist(user.uid)) ){
+  async setNewUserData(user: any) {
+    /* if( (await this.doesUserExist(user.uid)) ){
       throw new Error("Existe el usuario");
-    }
+    } */
     const itemRef = this.afdb.object(`/usuarios/${user.uid}`);
     const userData: User = {
       uid: user.uid,
@@ -118,9 +131,9 @@ export class AuthService {
   // Send email verfificaiton when new user sign up
   async sendVerificationMail() {
     let user = await this.afAuth.currentUser;
-    if(user){
+    if (user) {
       await user.sendEmailVerification();
-      this.router.navigate(['verify-email-address']);
+      this.router.navigate(["verify-email-address"]);
     }
   }
 

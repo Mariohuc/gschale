@@ -9,6 +9,7 @@ declare var VANTA: any;
   styleUrls: ["./login.component.css"],
 })
 export class LoginComponent implements OnInit {
+  errorMsg: string = '';
   constructor(public authService: AuthService) {}
 
   ngOnInit(): void {
@@ -25,5 +26,14 @@ export class LoginComponent implements OnInit {
       colorMode: "lerp",
       birdSize: 0.8,
     });
+  }
+
+  async signIn( email: any, password: any ){
+    try {
+      await this.authService.signIn(email, password);
+    } catch (error) {
+      //this.errorMsg = error;
+      window.alert(error.message);
+    }
   }
 }

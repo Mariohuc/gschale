@@ -1,6 +1,6 @@
 <h1 align="center">GES Chale</h1>
 <h4 align="center">
-Aplicacion de gestion administrativa, para facilitar la gestion la programacion de asesorias.
+Aplicacion de gestion administrativa, para facilitar la programacion de asesorias.
 </h4>
 
 <p align="center">
@@ -22,14 +22,23 @@ Aplicacion de gestion administrativa, para facilitar la gestion la programacion 
 
 <h2 align="center"><a  href="https://solitairevue.firebaseapp.com">Link</a></h2>
 
-### [Contributions are Welcome](https://github.com/silent-lad/VueSolitaire/blob/master/CONTRIBUTING.md)
+[Contributions are Welcome](https://github.com/silent-lad/VueSolitaire/blob/master/CONTRIBUTING.md)
 
-## Description
+# Sobre el proyecto
 
 **Finalidad del proyecto**
 
 <p align="center">
 
-**This project is inspired by [AadumKhor](https://github.com/AadumKhor) Go check out his flutter implementation of the same [Here](https://github.com/AadumKhor/Solitaire_Flutter)**.
+**This project is inspired by [Mariohuc](https://github.com/Mariohuc) Go check out his IONIC implementation of the same [Here](https://github.com/AadumKhor/Solitaire_Flutter)**.
 
 </p>
+
+# Setup
+De ser necesario, actualizar `angular-cli` a las version 10 o mas reciente.
+```
+git clone https://github.com/Mariohuc/gschale.git
+cd gschale
+npm install
+ng serve -o
+```
