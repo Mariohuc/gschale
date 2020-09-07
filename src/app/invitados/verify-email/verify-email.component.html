@@ -1,0 +1,31 @@
+<div fxLayout fxLayoutAlign="center center" style="min-height: 100vh">
+
+  <mat-card fxFlex.gt-md="30" fxFlex.gt-xs="60" fxFlex="100">
+    <mat-card-header style="background-color:gold ; color:aliceblue ;">
+      <div mat-card-avatar class="example-header-image"></div>
+      <mat-card-title>Bienvenido chaleciano!</mat-card-title>
+      <mat-card-subtitle>Verifica tu correo </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content fxLayout="column">
+      <h3>Gracias por registrarte</h3>
+
+      <div class="formGroup" *ngIf="authService.user$ | async as user">
+        <p class="text-center">Hemos enviado un email de confirmacion a <strong>{{user.email}}</strong>.</p>
+        <p class="text-center">Revisa tu email y haz click sobre el link para confirmar tu direccion de email.</p>
+      </div>
+
+      <!-- Calling SendVerificationMail() method using authService Api -->
+      <div class="formGroup">
+        <button type="button" class="btn btnPrimary" (click)="authService.sendVerificationMail()">
+          <i class="fas fa-redo-alt"></i>
+          Reenviar confirmacion de email.
+        </button>
+      </div>
+    
+      <div class="redirectToLogin">
+        <span>Regresar a<span class="redirect" routerLink="/login"> Iniciar sesion</span></span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

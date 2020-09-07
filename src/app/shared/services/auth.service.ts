@@ -4,18 +4,21 @@ import { User } from "../models/user";
 
 import { auth } from "firebase/app";
 import { AngularFireAuth } from "@angular/fire/auth";
-import { AngularFireDatabase } from "@angular/fire/database";
+import {
+  AngularFirestore,
+  AngularFirestoreDocument,
+} from "@angular/fire/firestore";
 
 import { Observable, of } from "rxjs";
 import { switchMap, take, map } from "rxjs/operators";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
-  user$: Observable<User | null>;
+  user$: Observable<User | null | undefined>;
 
   constructor(
     private afAuth: AngularFireAuth,
-    private afdb: AngularFireDatabase,
+    private afs: AngularFirestore,
     private router: Router
   ) {
     // Get the auth state, then fetch the Firestore user document or return null
@@ -23,7 +26,7 @@ export class AuthService {
       switchMap((user) => {
         // Logged in
         if (user) {
-          return this.afdb.object<User>(`/usuarios/${user.uid}`).valueChanges();
+          return this.afs.doc<User>(`/usuarios/${user.uid}`).valueChanges();
         } else {
           // Logged out
           return of(null);
@@ -33,17 +36,10 @@ export class AuthService {
   }
 
   // Sign in with email/password
-  signIn(email: any, password: any) {
-    return new Promise((resolve, reject) => {
-      this.afAuth
-        .signInWithEmailAndPassword(email, password)
-        .then((credential) => {
-          //this.setUserData(credential.user);
-          this.router.navigate(["/user/dashboard"]);
-          resolve();
-        })
-        .catch((error) => reject(error));
-    });
+  async signIn(email: any, password: any) {
+    const credential = await this.afAuth.signInWithEmailAndPassword(email, password); 
+    //this.setUserData(credential.user);
+    this.router.navigate(["/user/dashboard"]); 
   }
 
   // Sign up with email/password
@@ -77,7 +73,7 @@ export class AuthService {
   sign up with username/password and sign in with social auth
   provider in Firestore database using AngularFirestore + AngularFirestoreDocument service */
   /* setUserData(user:any) {
-    const itemRef = this.afdb.object(`/usuarios/${user.uid}`);
+    const itemRef = this.afs.object(`/usuarios/${user.uid}`);
     const userData: User = {
       uid: user.uid,
       email: user.email,
@@ -90,8 +86,8 @@ export class AuthService {
 
   doesUserExist(user_uid: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      const user = this.afdb
-        .object<User>(`/usuarios/${user_uid}`)
+      const user = this.afs
+        .doc<User>(`/usuarios/${user_uid}`)
         .snapshotChanges();
       user.pipe(
         take(1),
@@ -109,8 +105,8 @@ export class AuthService {
     /* if( (await this.doesUserExist(user.uid)) ){
       throw new Error("Existe el usuario");
     } */
-    const itemRef = this.afdb.object(`/usuarios/${user.uid}`);
-    const userData: User = {
+    const itemRef: AngularFirestoreDocument<User> = this.afs.doc(`/usuarios/${user.uid}`);
+    const userData = {
       uid: user.uid,
       email: user.email,
       photoURL: user.photoURL,
@@ -124,7 +120,7 @@ export class AuthService {
       rol: user.rol,
       activo: user.activo,
     };
-    return itemRef.set(userData);
+    return itemRef.set(userData, { merge: true });
     //return this.setUserData(user);
   }
 
@@ -133,7 +129,7 @@ export class AuthService {
     let user = await this.afAuth.currentUser;
     if (user) {
       await user.sendEmailVerification();
-      this.router.navigate(["verify-email-address"]);
+      this.router.navigate(["/verify-email-address"]);
     }
   }
 

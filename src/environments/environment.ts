@@ -6,13 +6,13 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: "AIzaSyBDuSTPVGyPaCe7eZOXwXwpm_pOgAhzHNo",
-    authDomain: "first-db-testing.firebaseapp.com",
-    databaseURL: "https://first-db-testing.firebaseio.com",
-    projectId: "first-db-testing",
-    storageBucket: "first-db-testing.appspot.com",
-    messagingSenderId: "899882572837",
-    appId: "1:899882572837:web:d1a815df14f61963ef33cc",
-    measurementId: "G-6HBTNP6FE4"
+    apiKey: "AIzaSyCdlycOnEM6p4saL1IVS9gM3Z0kToaAvmc",
+    authDomain: "chale-fire-77766.firebaseapp.com",
+    databaseURL: "https://chale-fire-77766.firebaseio.com",
+    projectId: "chale-fire-77766",
+    storageBucket: "chale-fire-77766.appspot.com",
+    messagingSenderId: "983138681112",
+    appId: "1:983138681112:web:4081c62536d72029c95e6d",
+    measurementId: "G-FV7MR6THYQ"
   }
 };

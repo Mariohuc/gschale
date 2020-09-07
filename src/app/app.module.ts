@@ -19,11 +19,14 @@ import { SharedModule } from './shared/shared.module';
 import { SpinnerComponent } from './shared/spinner.component';
 
 import { AngularFireModule } from '@angular/fire';
-import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+
 import { environment } from '../environments/environment';
 
 // Auth service
-import { AuthService } from "./shared/services/auth.service";
+//import { AuthService } from "./shared/services/auth.service";
 
 @NgModule({
   declarations: [
@@ -43,14 +46,15 @@ import { AuthService } from "./shared/services/auth.service";
     SharedModule,
     RouterModule.forRoot(AppRoutes),
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFireDatabaseModule
+    AngularFireAuthModule,
+    AngularFirestoreModule,
+    AngularFireStorageModule
   ],
   providers: [
     {
       provide: LocationStrategy,
       useClass: PathLocationStrategy,
-    },
-    AuthService
+    }
   ],
   bootstrap: [AppComponent]
 })

@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { AuthService } from "../../shared/services/auth.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 declare var VANTA: any;
 
@@ -9,8 +10,10 @@ declare var VANTA: any;
   styleUrls: ["./login.component.css"],
 })
 export class LoginComponent implements OnInit {
-  errorMsg: string = '';
-  constructor(public authService: AuthService) {}
+  constructor(
+    public authService: AuthService,
+    private _snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     VANTA.BIRDS({
@@ -28,12 +31,13 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  async signIn( email: any, password: any ){
-    try {
-      await this.authService.signIn(email, password);
-    } catch (error) {
-      //this.errorMsg = error;
-      window.alert(error.message);
-    }
+  signIn(email: any, password: any) {
+    this.authService
+      .signIn(email, password)
+      .catch((error) => this.openErrorSnackBar( error.message, "Cerrar" ));
+  }
+
+  openErrorSnackBar(message: string, action: string) {
+    this._snackBar.open( message, action);
   }
 }

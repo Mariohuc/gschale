@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
     return this.auth.user$.pipe(
       take(1),
       map((user) => {
-        if(!user){
+        if(!user || user.emailVerified === false){
           console.log("access denied");      
           this.router.navigate(["/login"]);
           return false;

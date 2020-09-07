@@ -9,20 +9,17 @@
 
     <mat-card-content fxLayout="column">
       <mat-form-field>
-        <input matInput type="text" placeholder="Username" #userName required/>
+        <input matInput type="text" placeholder="Email" #userName required/>
       </mat-form-field>
       <mat-form-field>
-        <input matInput type="password" placeholder="Password" #userPassword required/>
+        <input matInput type="password" placeholder="Contraseña" #userPassword required/>
       </mat-form-field>
     </mat-card-content>
     <mat-card-actions fxLayout="column" fxLayoutAlign="center center">
       <button mat-raised-button color="primary" (click)="signIn(userName.value, userPassword.value)">Entrar</button><br>
       <a mat-button href="https://www.google.com/" color="accent" target="_blank">Soy alumno nuevo, sin estrenar!</a>
-      <a mat-button href="https://www.google.com/" color="warn" target="_blank">Quiero postular como voluntario!</a>
+      <a mat-button routerLink="/signup-voluntary" color="warn">Quiero postular como voluntario!</a>
       <br>
     </mat-card-actions>
-    <mat-card-footer *ngIf="errorMsg !== ''">
-      {{ errorMsg }}
-    </mat-card-footer>
   </mat-card>
 </div>
