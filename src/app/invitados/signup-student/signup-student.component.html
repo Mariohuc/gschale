@@ -1,1 +1,117 @@
-<p>signup-student works!</p>
+<form [formGroup]="form" (ngSubmit)="sendData()">
+  <mat-card class="container" style="margin: auto">
+    <mat-card-header class="row center-xs">
+      <mat-card-title>REGISTRO DE ESTUDIANTE</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="row center-xs">
+        <div class="col-sm-6">
+          <mat-form-field>
+            <mat-label>Ingresa tu nombre</mat-label>
+            <input
+              type="text"
+              placeholder="Nombre"
+              formControlName="name"
+              matInput
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Ingresa tus apellidos</mat-label>
+            <input
+              type="text"
+              placeholder="Apellidos"
+              formControlName="lastname"
+              matInput
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Ingresa tu número de contácto</mat-label>
+            <input
+              type="text"
+              placeholder="celular"
+              formControlName="numberCel"
+              matInput
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Provincia o distrito</mat-label>
+            <input
+              type="text"
+              placeholder="Lugar donde vives"
+              formControlName="place"
+              matInput
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Colegio</mat-label>
+            <mat-select formControlName="typeSchool">
+              <mat-option *ngFor="let ts of typeSchool" [value]="ts">{{
+                ts
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Nombre de colegio(OPCIONAL)</mat-label>
+            <input
+              type="text"
+              placeholder="Colegio"
+              formControlName="nameSchool"
+              matInput
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-sm-6">
+          <mat-label>Nivel en el que estás</mat-label>
+
+          <mat-radio-group
+            formControlName="nivel"
+            aria-label="Select an option"
+          >
+            <mat-radio-button *ngFor="let l of level" [value]="l">{{
+              l
+            }}</mat-radio-button>
+          </mat-radio-group>
+          <div *ngIf="form.value.nivel == 'Primaria'">
+            <mat-form-field>
+              <mat-label>Grado</mat-label>
+              <mat-select formControlName="grade">
+                <mat-option *ngFor="let p of primaria" [value]="p">{{
+                  p
+                }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div *ngIf="form.value.nivel == 'Secundaria'">
+            <mat-form-field>
+              <mat-label>Grado</mat-label>
+              <mat-select formControlName="grade">
+                <mat-option *ngFor="let s of secundaria" [value]="s">{{
+                  s
+                }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <mat-card-title class="center-xs">Crea tu usuario</mat-card-title>
+          <mat-form-field>
+            <mat-label>Correo electrónico</mat-label>
+            <input
+              matInput
+              placeholder="example@example.com"
+              formControlName="email"
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Contraseña</mat-label>
+            <input matInput type="password" formControlName="password" />
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-footer>
+      <div class="row center-xs">
+        <button mat-raised-button color="primary" type="submit">ENVIAR</button>
+      </div>
+    </mat-card-footer>
+  </mat-card>
+</form>

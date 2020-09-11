@@ -3,22 +3,27 @@ import { Routes } from "@angular/router";
 import { LoginComponent } from "./login/login.component";
 import { VerifyEmailComponent } from "./verify-email/verify-email.component";
 import { SignupVoluntaryComponent } from "./signup-voluntary/signup-voluntary.component";
+import { SignupStudentComponent } from "./signup-student/signup-student.component";
 
 export const InvitadosRoutes: Routes = [
   {
     path: "login",
-    component: LoginComponent
+    component: LoginComponent,
   },
   {
     path: "verify-email-address",
-    component: VerifyEmailComponent
+    component: VerifyEmailComponent,
   },
   {
     path: "signup-voluntary",
-    component: SignupVoluntaryComponent
+    component: SignupVoluntaryComponent,
   },
   {
-    path: '**',
-    redirectTo: '/login'
-  }
+    path: "signup-student",
+    component: SignupStudentComponent,
+  },
+  {
+    path: "**",
+    redirectTo: "/login",
+  },
 ];
