@@ -19,7 +19,10 @@ export class SignupStudentComponent implements OnInit {
   ngOnInit(): void {}
 
   sendData() {
-    console.log(this.form.value);
+    if (this.form.valid) {
+      const registroEst = this.form.value;
+      console.log(registroEst);
+    }
   }
 
   // construyendo el formulario en base a un JSON
@@ -29,7 +32,7 @@ export class SignupStudentComponent implements OnInit {
       password: ["", [Validators.required]],
       name: ["", [Validators.required]],
       lastname: ["", [Validators.required]],
-      numberCel: ["", Validators.maxLength(9)],
+      numberCel: ["", [Validators.pattern(/^\d{9}$/), Validators.required]],
       place: ["", Validators.required],
       typeSchool: ["", Validators.required],
       nameSchool: "",

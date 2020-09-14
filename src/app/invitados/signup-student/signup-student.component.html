@@ -1,117 +1,172 @@
-<form [formGroup]="form" (ngSubmit)="sendData()">
-  <mat-card class="container" style="margin: auto">
-    <mat-card-header class="row center-xs">
-      <mat-card-title>REGISTRO DE ESTUDIANTE</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="row center-xs">
-        <div class="col-sm-6">
-          <mat-form-field>
-            <mat-label>Ingresa tu nombre</mat-label>
-            <input
-              type="text"
-              placeholder="Nombre"
-              formControlName="name"
-              matInput
-            />
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Ingresa tus apellidos</mat-label>
-            <input
-              type="text"
-              placeholder="Apellidos"
-              formControlName="lastname"
-              matInput
-            />
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Ingresa tu número de contácto</mat-label>
-            <input
-              type="text"
-              placeholder="celular"
-              formControlName="numberCel"
-              matInput
-            />
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Provincia o distrito</mat-label>
-            <input
-              type="text"
-              placeholder="Lugar donde vives"
-              formControlName="place"
-              matInput
-            />
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Colegio</mat-label>
-            <mat-select formControlName="typeSchool">
-              <mat-option *ngFor="let ts of typeSchool" [value]="ts">{{
-                ts
-              }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Nombre de colegio(OPCIONAL)</mat-label>
-            <input
-              type="text"
-              placeholder="Colegio"
-              formControlName="nameSchool"
-              matInput
-            />
-          </mat-form-field>
-        </div>
-        <div class="col-sm-6">
-          <mat-label>Nivel en el que estás</mat-label>
+<div class="row middle-xs" style="min-height: 100vh">
+  <form [formGroup]="form" (ngSubmit)="sendData()">
+    <mat-card class="container" style="margin: auto; width: 70%">
+      <mat-card-header
+        class="row center-xs"
+        style="
+          background-color: crimson;
+          color: white;
+          width: 100%;
+          margin: 0 auto;
+        "
+      >
+        <mat-card-title>REGISTRO DEL ESTUDIANTE</mat-card-title>
+      </mat-card-header>
+      <mat-card-content style="margin: 0">
+        <div class="row center-xs">
+          <div class="col-sm-6" style="padding: 1em">
+            <mat-form-field>
+              <mat-label>Ingresa tu nombre</mat-label>
+              <input
+                type="text"
+                placeholder="Nombre"
+                formControlName="name"
+                matInput
+              />
+              <mat-error *ngIf="form.hasError('required', 'name')"
+                >Este campo es requerido</mat-error
+              >
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Ingresa tus apellidos</mat-label>
+              <input
+                type="text"
+                placeholder="Apellidos"
+                formControlName="lastname"
+                matInput
+              />
+              <mat-error *ngIf="form.hasError('required', 'lastname')"
+                >Este campo es requerido</mat-error
+              >
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Ingresa tu número de contácto</mat-label>
+              <input
+                type="text"
+                placeholder="celular"
+                formControlName="numberCel"
+                matInput
+              />
+              <mat-error *ngIf="form.hasError('pattern', 'numberCel')"
+                >Revise si es correcto</mat-error
+              >
+              <mat-error *ngIf="form.hasError('required', 'numberCel')"
+                >Este campo es requerido</mat-error
+              >
+            </mat-form-field>
 
-          <mat-radio-group
-            formControlName="nivel"
-            aria-label="Select an option"
+            <mat-form-field>
+              <mat-label>Provincia o distrito</mat-label>
+              <input
+                type="text"
+                placeholder="Lugar donde vives"
+                formControlName="place"
+                matInput
+              />
+              <mat-error *ngIf="form.hasError('required', 'place')"
+                >Este campo es requerido</mat-error
+              >
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Tipo de colegio</mat-label>
+              <mat-select formControlName="typeSchool">
+                <mat-option *ngFor="let ts of typeSchool" [value]="ts">{{
+                  ts
+                }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="form.hasError('required', 'typeSchool')"
+                >Este campo es requerido</mat-error
+              >
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Nombre de colegio(OPCIONAL)</mat-label>
+              <input
+                type="text"
+                placeholder="Colegio"
+                formControlName="nameSchool"
+                matInput
+              />
+            </mat-form-field>
+          </div>
+          <div class="col-sm-6" style="padding: 1em">
+            <mat-label>Nivel en el que estás</mat-label>
+            <br />
+            <mat-radio-group
+              formControlName="nivel"
+              style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin: 1em 0;
+              "
+            >
+              <mat-radio-button *ngFor="let l of level" [value]="l">{{
+                l
+              }}</mat-radio-button>
+            </mat-radio-group>
+
+            <div *ngIf="form.value.nivel == 'Primaria'">
+              <mat-form-field>
+                <mat-label>Grado</mat-label>
+                <mat-select formControlName="grade">
+                  <mat-option *ngFor="let p of primaria" [value]="p">{{
+                    p
+                  }}</mat-option>
+                  <mat-error *ngIf="form.hasError('required', 'grade')"
+                    >Este campo es requerido</mat-error
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div *ngIf="form.value.nivel == 'Secundaria'">
+              <mat-form-field>
+                <mat-label>Grado</mat-label>
+                <mat-select formControlName="grade">
+                  <mat-option *ngFor="let s of secundaria" [value]="s">{{
+                    s
+                  }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.hasError('required', 'grade')"
+                  >Este campo es requerido</mat-error
+                >
+              </mat-form-field>
+            </div>
+
+            <mat-card-title class="center-xs">Crea tu usuario</mat-card-title>
+            <mat-form-field>
+              <mat-label>Correo electrónico</mat-label>
+              <input
+                matInput
+                placeholder="example@example.com"
+                formControlName="email"
+              />
+              <mat-error *ngIf="form.hasError('required', 'email')"
+                >Este campo es requerido</mat-error
+              >
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Contraseña</mat-label>
+              <input matInput type="password" formControlName="password" />
+              <mat-error *ngIf="form.hasError('required', 'password')"
+                >Este campo es requerido</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-footer>
+        <div class="row center-xs">
+          <button
+            [disabled]="form.invalid"
+            mat-raised-button
+            color="primary"
+            type="submit"
+            style="width: 50%; margin: 1em 0"
           >
-            <mat-radio-button *ngFor="let l of level" [value]="l">{{
-              l
-            }}</mat-radio-button>
-          </mat-radio-group>
-          <div *ngIf="form.value.nivel == 'Primaria'">
-            <mat-form-field>
-              <mat-label>Grado</mat-label>
-              <mat-select formControlName="grade">
-                <mat-option *ngFor="let p of primaria" [value]="p">{{
-                  p
-                }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <div *ngIf="form.value.nivel == 'Secundaria'">
-            <mat-form-field>
-              <mat-label>Grado</mat-label>
-              <mat-select formControlName="grade">
-                <mat-option *ngFor="let s of secundaria" [value]="s">{{
-                  s
-                }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-
-          <mat-card-title class="center-xs">Crea tu usuario</mat-card-title>
-          <mat-form-field>
-            <mat-label>Correo electrónico</mat-label>
-            <input
-              matInput
-              placeholder="example@example.com"
-              formControlName="email"
-            />
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Contraseña</mat-label>
-            <input matInput type="password" formControlName="password" />
-          </mat-form-field>
+            ENVIAR
+          </button>
         </div>
-      </div>
-    </mat-card-content>
-    <mat-card-footer>
-      <div class="row center-xs">
-        <button mat-raised-button color="primary" type="submit">ENVIAR</button>
-      </div>
-    </mat-card-footer>
-  </mat-card>
-</form>
+      </mat-card-footer>
+    </mat-card>
+  </form>
+</div>
