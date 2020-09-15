@@ -2,6 +2,8 @@ import { Component, AfterViewInit } from '@angular/core';
 
 import * as Chartist from 'chartist';
 import { ChartType, ChartEvent } from 'ng-chartist';
+import { AuthService } from '../shared/services/auth.service';
+//import { map, take } from "rxjs/operators";
 declare var require: any;
 
 const data= require('./data.json');
@@ -20,6 +22,12 @@ export interface Chart {
 	styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements AfterViewInit {
+	authUserUID: string | undefined;
+	constructor(private authService: AuthService) {
+		this.authService.user$.subscribe(
+			(user) => { this.authUserUID = (!!user)? user.uid : ""; }
+		);
+	}
 	ngAfterViewInit() {}
 
 	// Barchart

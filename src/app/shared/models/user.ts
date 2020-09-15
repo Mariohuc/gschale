@@ -1,10 +1,10 @@
 export interface User {
-  uid?: string;
+  uid: string;
   dni?: string;
   nombres?: string;
   apellidos?: string;
   displayName?: string;
-  email?: string;
+  email: string;
   password?: string;
   fecha_nacimiento?: any;
   photoURL?: string,
