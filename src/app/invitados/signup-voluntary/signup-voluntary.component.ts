@@ -1,5 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, Validators, FormBuilder } from "@angular/forms";
+import { Roles } from "../../shared/models/user";
+import { CommonItems } from "../../shared/services/commons.service";
+import { HorarioTestPsicoService } from "../../shared/services/horario_test_psicologicos.service";
+import { AuthService } from "../../shared/services/auth.service";
 
 @Component({
   selector: "app-signup-voluntary",
@@ -7,25 +11,57 @@ import { FormGroup, Validators, FormBuilder } from "@angular/forms";
   styleUrls: ["./signup-voluntary.component.css"],
 })
 export class SignupVoluntaryComponent implements OnInit {
-  voluntaryForm: FormGroup | undefined;
-  constructor(private formBuilder: FormBuilder) {}
-
-  ngOnInit(): void {
-    this.voluntaryForm = this.formBuilder.group(
+  voluntaryFormP1: FormGroup;
+  voluntaryFormP2: FormGroup;
+  formPart = 0;
+  horarios: any;
+  constructor(
+    private formBuilder: FormBuilder,
+    public citems: CommonItems,
+    public htp: HorarioTestPsicoService,
+    private authService: AuthService) {
+    this.voluntaryFormP1 = this.formBuilder.group(
       {
-        dni: ["", Validators.required, Validators.pattern(/^\d{8}$/)],
-        nombres: ["", Validators.required],
-        apellidos: ["", Validators.required],
+        //First part
+        dni: ["", [Validators.required, Validators.pattern(/^\d{8}$/)]],
+        nombres: ["", [Validators.required]],
+        apellidos: ["", [Validators.required]],
         email: ["", [Validators.required, Validators.email]],
-        password: ["", [Validators.required]],
-        confirmPassword: ["", Validators.required],
-        fecha_nacimiento: ["", Validators.required],
-        numero_celular: ["", Validators.required],
+        password: ["", [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ["", [Validators.required]],
+        fecha_nacimiento: [new Date(), [Validators.required]],
+        numero_celular: ["", [Validators.required]],
+        rol: [Roles.VOLUNTARIO],
+        activo: [true]
       },
       {
         validator: this.mustMatch("password", "confirmPassword"),
       }
     );
+    this.voluntaryFormP2 = this.formBuilder.group(
+      {
+        //Second part
+        grado_academico: ["", [Validators.required]],
+        carrera: ["", [Validators.required]],
+        grados_de_interes: ["", [Validators.required]],
+        areas_asesorias: ["", [Validators.required]],
+        horas_libre_semana: ["", [Validators.required]],
+        estado_civil: ["", [Validators.required]],
+        numero_hijos: ["", [Validators.required]],
+        experiencia: ["", []],
+        horario_test_psico: ["", [Validators.required]]
+      }
+    );
+  }
+
+  ngOnInit(): void {
+    this.htp.getHorarios().subscribe(data => {
+      this.horarios = data.map(e => ({
+          id: e.payload.doc.id,
+          ...(e.payload.doc.data() as {})
+        })
+      )
+    });
   }
 
   mustMatch(controlName: string, matchingControlName: string) {
@@ -45,5 +81,12 @@ export class SignupVoluntaryComponent implements OnInit {
         matchingControl.setErrors(null);
       }
     };
+  }
+
+  signupVoluntary(){
+    let userData = Object.assign({}, this.voluntaryFormP1.value);
+    userData = Object.assign(userData, this.voluntaryFormP2.value);
+    this.authService.signUpForVoluntary(userData);
+    //console.log(userData);
   }
 }

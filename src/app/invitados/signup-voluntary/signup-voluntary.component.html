@@ -4,12 +4,12 @@
     <mat-card-header style="background-color:crimson ; color:white ;">
       <div mat-card-avatar class="example-header-image"></div>
       <mat-card-title>Registro</mat-card-title>
-      <mat-card-subtitle>Postula para voluntario</mat-card-subtitle>
+      <mat-card-subtitle><strong>Postula para voluntario</strong></mat-card-subtitle>
     </mat-card-header>
     
-    <mat-card-content>
-      <form [formGroup]="voluntaryForm" fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center">
-        <div fxFlex.gt-sm="40" fxFlex="100">
+    <mat-card-content *ngIf="formPart == 0">
+      <form [formGroup]="voluntaryFormP1" fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center">
+        <div fxFlex.gt-sm="45" fxFlex="100">
           <div fxLayout="column">
             <mat-form-field appearance="fill">
               <mat-label>Ingresa tu DNI</mat-label>
@@ -36,14 +36,14 @@
           </div>
         </div>
 
-        <div fxFlex.gt-sm="40" fxFlex="100">
+        <div fxFlex.gt-sm="45" fxFlex="100">
           <div fxLayout="column">
             <mat-form-field appearance="fill">
               <mat-label>Ingresa tu email</mat-label>
               <input matInput placeholder="example@example.com" formControlName="email" required>
             </mat-form-field>
             <mat-form-field appearance="fill">
-              <mat-label>Ingresa nueva contraseña</mat-label>
+              <mat-label>Ingresa nueva contraseña (6 caracteres min.)</mat-label>
               <input type="password" matInput formControlName="password" required>
             </mat-form-field>
             <mat-form-field appearance="fill">
@@ -54,8 +54,88 @@
         </div>
       </form>
     </mat-card-content>
+
+    <mat-card-content *ngIf="formPart == 1">
+      <form [formGroup]="voluntaryFormP2" fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center">
+        <div fxFlex.gt-sm="45" fxFlex="100">
+          <div fxLayout="column">
+            <mat-form-field appearance="fill">
+              <mat-label>Grado académico</mat-label>
+              <mat-select formControlName="grado_academico" required>
+                <mat-option *ngFor="let gac of citems.getGrAcademicos()" [value]="gac">
+                  {{gac}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Carrera</mat-label>
+              <input matInput formControlName="carrera" required>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Te gustaria enseñar a chicos de</mat-label>
+              <mat-select formControlName="grados_de_interes" required>
+                <mat-option *ngFor="let gdi of citems.getGrDeInteres()" [value]="gdi">
+                  {{gdi}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>En que áreas brindarias asesoria</mat-label>
+              <mat-select formControlName="areas_asesorias" multiple required>
+                <mat-option *ngFor="let aa of citems.getAreasAsesoria()" [value]="aa">
+                  {{aa}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>¿Cuantas horas/semana puedes enseñar?</mat-label>
+              <mat-select formControlName="horas_libre_semana" required>
+                <mat-option *ngFor="let hse of citems.getHorasSemana()" [value]="hse">
+                  {{hse}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div fxFlex.gt-sm="45" fxFlex="100">
+          <div fxLayout="column">
+            <mat-form-field appearance="fill">
+              <mat-label>Estado civil</mat-label>
+              <mat-select formControlName="estado_civil" required>
+                <mat-option *ngFor="let ec of citems.getEstadosCiviles()" [value]="ec">
+                  {{ec}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>¿Cuantos hijos tienes?</mat-label>
+              <mat-select formControlName="numero_hijos" required>
+                <mat-option *ngFor="let nh of citems.getNumeroHijos()" [value]="nh">
+                  {{nh}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <mat-label>¿Tienes experiencia? cuentanos</mat-label>
+              <textarea matInput placeholder="Tengo experiencia con..." formControlName="experiencia"></textarea>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Elije horario para tu test Psicológico</mat-label>
+              <mat-select formControlName="horario_test_psico" required>
+                <mat-option *ngFor="let hor of horarios" [value]="hor.id">
+                  {{hor.horario.toDate() | date: 'medium' }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+    </mat-card-content>
+
     <mat-card-actions fxLayout="column" fxLayoutAlign="center center">
-      <button mat-raised-button color="primary">Siguiente</button><br>
+      <button mat-raised-button color="primary" *ngIf="formPart==0" (click)="formPart = formPart + 1" [disabled]="!voluntaryFormP1.valid">Siguiente</button><br>
+      <button mat-raised-button color="green" *ngIf="formPart==1" (click)="signupVoluntary()" [disabled]="!voluntaryFormP2.valid">Registrar</button><br>
     </mat-card-actions>
     
   </mat-card>

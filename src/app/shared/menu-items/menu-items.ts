@@ -1,55 +1,32 @@
 import { Injectable } from '@angular/core';
+import { Roles } from "../models/user";
 
 export interface Menu {
   state: string;
   name: string;
   type: string;
   icon: string;
+  belongTo?: string,
+  isForAny?: boolean
 }
 
 const MENUITEMS = [
-  { state: 'dashboard', name: 'Dashboard', type: 'link', icon: 'av_timer' },
-  { state: 'button', type: 'link', name: 'Buttons', icon: 'crop_7_5' },
-  { state: 'grid', type: 'link', name: 'Grid List', icon: 'view_comfy' },
-  { state: 'lists', type: 'link', name: 'Lists', icon: 'view_list' },
-  { state: 'menu', type: 'link', name: 'Menu', icon: 'view_headline' },
-  { state: 'tabs', type: 'link', name: 'Tabs', icon: 'tab' },
-  { state: 'stepper', type: 'link', name: 'Stepper', icon: 'web' },
+  { state: 'dashboard', name: 'Dashboard', type: 'link', icon: 'av_timer', isForAny: true },
+  { state: 'button', type: 'link', name: 'Buttons', icon: '3d_rotation', belongTo: Roles.VOLUNTARIO },
+  { state: 'grid', type: 'link', name: 'Grid List', icon: 'view_comfy', belongTo: Roles.VOLUNTARIO },
+  { state: 'lists', type: 'link', name: 'Lists', icon: 'view_list', belongTo: Roles.ADMIN },
+  { state: 'menu', type: 'link', name: 'Menu', icon: 'view_headline', belongTo: Roles.ADMIN },
+  { state: 'tabs', type: 'link', name: 'Tabs', icon: 'tab', belongTo: Roles.ADMIN },
+  { state: 'stepper', type: 'link', name: 'Stepper', icon: 'web', belongTo: Roles.ALUMNO },
   {
     state: 'expansion',
     type: 'link',
     name: 'Expansion Panel',
-    icon: 'vertical_align_center'
+    icon: 'vertical_align_center',
+    belongTo: Roles.ALUMNO
   },
-  { state: 'chips', type: 'link', name: 'Chips', icon: 'vignette' },
-  { state: 'toolbar', type: 'link', name: 'Toolbar', icon: 'voicemail' },
-  {
-    state: 'progress-snipper',
-    type: 'link',
-    name: 'Progress snipper',
-    icon: 'border_horizontal'
-  },
-  {
-    state: 'progress',
-    type: 'link',
-    name: 'Progress Bar',
-    icon: 'blur_circular'
-  },
-  {
-    state: 'dialog',
-    type: 'link',
-    name: 'Dialog',
-    icon: 'assignment_turned_in'
-  },
-  { state: 'tooltip', type: 'link', name: 'Tooltip', icon: 'assistant' },
-  { state: 'snackbar', type: 'link', name: 'Snackbar', icon: 'adb' },
-  { state: 'slider', type: 'link', name: 'Slider', icon: 'developer_mode' },
-  {
-    state: 'slide-toggle',
-    type: 'link',
-    name: 'Slide Toggle',
-    icon: 'all_inclusive'
-  }
+  { state: 'chips', type: 'link', name: 'Chips', icon: 'vignette', belongTo: Roles.VOLUNTARIO },
+  { state: 'toolbar', type: 'link', name: 'Toolbar', icon: 'voicemail', belongTo: Roles.VOLUNTARIO },
 ];
 
 @Injectable()

@@ -7,7 +7,7 @@
       <mat-card-subtitle>Verifica tu correo </mat-card-subtitle>
     </mat-card-header>
 
-    <mat-card-content fxLayout="column">
+    <mat-card-content fxLayout="column" fxLayoutAlign="center center">
       <h3>Gracias por registrarte</h3>
 
       <div class="formGroup" *ngIf="authService.user$ | async as user">
@@ -17,14 +17,11 @@
 
       <!-- Calling SendVerificationMail() method using authService Api -->
       <div class="formGroup">
-        <button type="button" class="btn btnPrimary" (click)="authService.sendVerificationMail()">
-          <i class="fas fa-redo-alt"></i>
-          Reenviar confirmacion de email.
-        </button>
+        <button mat-raised-button color="primary" (click)="authService.sendVerificationMail()">Reenviar confirmacion de email</button>
       </div>
     
       <div class="redirectToLogin">
-        <span>Regresar a<span class="redirect" routerLink="/login"> Iniciar sesion</span></span>
+        <a mat-button routerLink="/login"> Iniciar sesion</a>
       </div>
     </mat-card-content>
   </mat-card>

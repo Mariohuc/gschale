@@ -4,7 +4,12 @@ import { DashboardComponent } from "./dashboard.component";
 
 export const DashboardRoutes: Routes = [
   {
-    path: "",
+    path: '',
+    redirectTo: '/user/dashboard',
+    pathMatch: "full"
+  },
+  {
+    path: "dashboard",
     component: DashboardComponent,
   },
 ];

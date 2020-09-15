@@ -6,6 +6,11 @@ import { SignupVoluntaryComponent } from "./signup-voluntary/signup-voluntary.co
 
 export const InvitadosRoutes: Routes = [
   {
+    path: '',
+    redirectTo: '/login',
+    pathMatch: "full"
+  },
+  {
     path: "login",
     component: LoginComponent
   },
@@ -16,9 +21,5 @@ export const InvitadosRoutes: Routes = [
   {
     path: "signup-voluntary",
     component: SignupVoluntaryComponent
-  },
-  {
-    path: '**',
-    redirectTo: '/login'
   }
 ];

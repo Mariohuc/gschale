@@ -8,7 +8,7 @@ import {
   AngularFirestore,
   AngularFirestoreDocument,
 } from "@angular/fire/firestore";
-
+import { DataVoluntarioService } from "./dataVoluntario.service";
 import { Observable, of } from "rxjs";
 import { switchMap, take, map } from "rxjs/operators";
 
@@ -19,14 +19,15 @@ export class AuthService {
   constructor(
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
-    private router: Router
+    private router: Router,
+    private afsdv: DataVoluntarioService
   ) {
     // Get the auth state, then fetch the Firestore user document or return null
     this.user$ = this.afAuth.authState.pipe(
       switchMap((user) => {
         // Logged in
-        if (user) {
-          return this.afs.doc<User>(`/usuarios/${user.uid}`).valueChanges();
+        if (user && user.emailVerified === true) {
+          return this.afs.doc<User>(`usuarios/${user.uid}`).valueChanges();
         } else {
           // Logged out
           return of(null);
@@ -38,7 +39,7 @@ export class AuthService {
   // Sign in with email/password
   async signIn(email: any, password: any) {
     const credential = await this.afAuth.signInWithEmailAndPassword(email, password); 
-    //this.setUserData(credential.user);
+    this.setUserData(credential.user);
     this.router.navigate(["/user/dashboard"]); 
   }
 
@@ -57,6 +58,26 @@ export class AuthService {
     this.setNewUserData(newdata);
   }
 
+  //Sign up for voluntary
+  async signUpForVoluntary(user: any) {
+    const credential = await this.afAuth.createUserWithEmailAndPassword(
+      user.email,
+      user.password
+    );
+    if (!credential.user) {
+      throw new Error("Error al crear la cuenta con este email/contraseña.");
+    }
+    const newdata = Object.assign(user, credential.user);
+    this.sendVerificationMail();
+    //this.setNewUserData(credential.user);
+    this.setNewUserData(newdata);
+    this.afsdv.createOrUpdateDataVoluntario(newdata);
+  }
+  async googleSignin() {
+    const provider = new auth.GoogleAuthProvider();
+    const credential = await this.afAuth.signInWithPopup(provider);
+    return this.setUserData(credential.user);
+  }
   // Reset Forggot password
   forgotPassword(passwordResetEmail: any) {
     return this.afAuth
@@ -72,22 +93,21 @@ export class AuthService {
   /* Setting up user data when sign in with username/password,
   sign up with username/password and sign in with social auth
   provider in Firestore database using AngularFirestore + AngularFirestoreDocument service */
-  /* setUserData(user:any) {
-    const itemRef = this.afs.object(`/usuarios/${user.uid}`);
-    const userData: User = {
+  setUserData(user:any) {
+    const itemRef: AngularFirestoreDocument<User> = this.afs.doc(`usuarios/${user.uid}`);
+    const userData = {
       uid: user.uid,
       email: user.email,
       displayName: user.displayName,
-      photoURL: user.photoURL,
       emailVerified: user.emailVerified,
     };
-    return itemRef.update(userData);
-  } */
+    return itemRef.set(userData, { merge: true });
+  }
 
   doesUserExist(user_uid: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const user = this.afs
-        .doc<User>(`/usuarios/${user_uid}`)
+        .doc<User>(`usuarios/${user_uid}`)
         .snapshotChanges();
       user.pipe(
         take(1),
@@ -105,7 +125,7 @@ export class AuthService {
     /* if( (await this.doesUserExist(user.uid)) ){
       throw new Error("Existe el usuario");
     } */
-    const itemRef: AngularFirestoreDocument<User> = this.afs.doc(`/usuarios/${user.uid}`);
+    const itemRef: AngularFirestoreDocument<User> = this.afs.doc(`usuarios/${user.uid}`);
     const userData = {
       uid: user.uid,
       email: user.email,
@@ -121,7 +141,6 @@ export class AuthService {
       activo: user.activo,
     };
     return itemRef.set(userData, { merge: true });
-    //return this.setUserData(user);
   }
 
   // Send email verfificaiton when new user sign up

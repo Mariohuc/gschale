@@ -5,7 +5,7 @@
     <!-- ============================================================== -->
     <!-- Topbar - style you can find in header.scss -->
     <!-- ============================================================== -->
-    <mat-toolbar color="primary" class="topbar telative">
+    <mat-toolbar style="background-color: gold;" class="topbar telative">
         <!-- ============================================================== -->
         <!-- Logo - style you can find in header.scss -->
         <!-- ============================================================== -->
@@ -13,25 +13,21 @@
             <a class="navbar-brand" href="index.html">
                 <!-- Logo icon --><b>
                     <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
-                    <!-- Dark Logo icon -->
-                    <img src="assets/images/logo-icon.png" alt="homepage" class="dark-logo">
                     <!-- Light Logo icon -->
-                    <img src="assets/images/logo-light-icon.png" alt="homepage" class="light-logo">
+                    <img src="assets/images/iconochale.jpg" alt="homepage" class="light-logo">
                 </b>
                 <!--End Logo icon -->
                 <!-- Logo text -->
-                <span fxShow="false" fxShow.gt-xs>
+                <span fxShow="false" fxShow.gt-xs style="color: white; font-size: large;">
                  <!-- dark Logo text -->
-                 <img src="assets/images/logo-text.png" alt="homepage" class="dark-logo">
-                 <!-- Light Logo text -->    
-                 <img src="assets/images/logo-light-text.png" class="light-logo" alt="homepage">
+                 Voluntariado Chale
                 </span> </a>
         </div>
         <!-- ============================================================== -->
         <!-- sidebar toggle -->
         <!-- ============================================================== -->
         
-        <button mat-icon-button (click)="snav.toggle()" value="sidebarclosed">
+        <button mat-icon-button (click)="snav.toggle()" style="color: white;" value="sidebarclosed">
             <mat-icon>menu</mat-icon>
         </button>
         <span fxFlex></span>
