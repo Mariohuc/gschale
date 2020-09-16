@@ -9,6 +9,7 @@ import {
   AngularFirestoreDocument,
 } from "@angular/fire/firestore";
 import { DataVoluntarioService } from "./dataVoluntario.service";
+import { DataAlumnoService } from "./dataAlumno.service";
 import { Observable, of } from "rxjs";
 import { switchMap, take, map } from "rxjs/operators";
 
@@ -20,7 +21,8 @@ export class AuthService {
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
     private router: Router,
-    private afsdv: DataVoluntarioService
+    private afsdv: DataVoluntarioService,
+    private afsda: DataAlumnoService
   ) {
     // Get the auth state, then fetch the Firestore user document or return null
     this.user$ = this.afAuth.authState.pipe(
@@ -73,6 +75,22 @@ export class AuthService {
     this.setNewUserData(newdata);
     this.afsdv.createOrUpdateDataVoluntario(newdata);
   }
+  //Sign up for alumno
+  async signUpForStudent(user: any) {
+    const credential = await this.afAuth.createUserWithEmailAndPassword(
+      user.email,
+      user.password
+    );
+    if (!credential.user) {
+      throw new Error("Error al crear la cuenta con este email/contraseña.");
+    }
+    const newdata = Object.assign(user, credential.user);
+    this.sendVerificationMail();
+    //this.setNewUserData(credential.user);
+    this.setNewUserData(newdata);
+    this.afsda.createOrUpdateDataAlumno(newdata);
+  }
+
   async googleSignin() {
     const provider = new auth.GoogleAuthProvider();
     const credential = await this.afAuth.signInWithPopup(provider);
