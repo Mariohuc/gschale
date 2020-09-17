@@ -28,7 +28,7 @@ export class AuthService {
     this.user$ = this.afAuth.authState.pipe(
       switchMap((user) => {
         // Logged in
-        if (user && user.emailVerified === true) {
+        if (user) {
           return this.afs.doc<User>(`usuarios/${user.uid}`).valueChanges();
         } else {
           // Logged out

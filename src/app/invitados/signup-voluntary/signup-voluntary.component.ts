@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, Validators, FormBuilder } from "@angular/forms";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { Roles } from "../../shared/models/user";
 import { CommonItems } from "../../shared/services/commons.service";
 import { HorarioTestPsicoService } from "../../shared/services/horario_test_psicologicos.service";
@@ -19,7 +20,8 @@ export class SignupVoluntaryComponent implements OnInit {
     private formBuilder: FormBuilder,
     public citems: CommonItems,
     public htp: HorarioTestPsicoService,
-    private authService: AuthService) {
+    private authService: AuthService,
+    private _snackBar: MatSnackBar) {
     this.voluntaryFormP1 = this.formBuilder.group(
       {
         //First part
@@ -55,7 +57,7 @@ export class SignupVoluntaryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.htp.getHorarios().subscribe(data => {
+    this.htp.getHorarios().subscribe(data => { //data will be an array of objects
       this.horarios = data.map(e => ({
           id: e.payload.doc.id,
           ...(e.payload.doc.data() as {})
@@ -86,7 +88,7 @@ export class SignupVoluntaryComponent implements OnInit {
   signupVoluntary(){
     let userData = Object.assign({}, this.voluntaryFormP1.value);
     userData = Object.assign(userData, this.voluntaryFormP2.value);
-    this.authService.signUpForVoluntary(userData);
+    this.authService.signUpForVoluntary(userData).catch(error => this._snackBar.open( error.message, "Cerrar"));
     //console.log(userData);
   }
 }

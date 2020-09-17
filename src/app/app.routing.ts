@@ -1,14 +1,13 @@
 import { Routes } from '@angular/router';
 
 import { FullComponent } from './layouts/full/full.component';
-import { AuthGuard } from "./shared/services/auth.guard";
+//import { AuthGuard } from "./shared/services/auth.guard";
 import { GuestGuard } from "./shared/services/guest.guard";
 
 export const AppRoutes: Routes = [
   {
     path: 'user',
     component: FullComponent,
-    canActivate: [AuthGuard], 
     loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
   },
   {

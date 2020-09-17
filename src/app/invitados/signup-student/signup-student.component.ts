@@ -1,7 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { CommonItems } from "../../shared/services/commons.service";
 import { Roles } from "../../shared/models/user";
+import { AuthService } from "../../shared/services/auth.service";
 
 @Component({
   selector: "app-signup-student",
@@ -10,17 +12,19 @@ import { Roles } from "../../shared/models/user";
 })
 export class SignupStudentComponent implements OnInit {
   form!: FormGroup;
-  constructor(private formBuilder: FormBuilder, public citems: CommonItems) {
+  constructor(
+    private formBuilder: FormBuilder, 
+    private authService: AuthService,
+    public citems: CommonItems,
+    private _snackBar: MatSnackBar) {
     this.buildForm();
   }
 
   ngOnInit(): void {}
 
-  sendData() {
-    if (this.form.valid) {
-      const registroEst = this.form.value;
-      console.log(registroEst);
-    }
+  signupStudent() {
+    let userData = Object.assign({}, this.form.value);
+    this.authService.signUpForStudent(userData).catch(error => this._snackBar.open( error.message, "Cerrar"));
   }
 
   // construyendo el formulario en base a un JSON
