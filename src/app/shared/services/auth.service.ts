@@ -8,6 +8,7 @@ import {
   AngularFirestore,
   AngularFirestoreDocument,
 } from "@angular/fire/firestore";
+import { UserService } from "./user.service";
 import { DataVoluntarioService } from "./dataVoluntario.service";
 import { DataAlumnoService } from "./dataAlumno.service";
 import { Observable, of } from "rxjs";
@@ -21,8 +22,9 @@ export class AuthService {
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
     private router: Router,
+    private afsu: UserService,
     private afsdv: DataVoluntarioService,
-    private afsda: DataAlumnoService
+    private afsda: DataAlumnoService,
   ) {
     // Get the auth state, then fetch the Firestore user document or return null
     this.user$ = this.afAuth.authState.pipe(
@@ -41,7 +43,7 @@ export class AuthService {
   // Sign in with email/password
   async signIn(email: any, password: any) {
     const credential = await this.afAuth.signInWithEmailAndPassword(email, password); 
-    this.setUserData(credential.user);
+    this.afsu.setUserData(credential.user);
     this.router.navigate(["/user/dashboard"]); 
   }
 
@@ -57,7 +59,7 @@ export class AuthService {
     const newdata = Object.assign(user, credential.user);
     this.sendVerificationMail();
     //this.setNewUserData(credential.user);
-    this.setNewUserData(newdata);
+    this.afsu.createOrUpdateUser(newdata);
   }
 
   //Sign up for voluntary
@@ -71,8 +73,7 @@ export class AuthService {
     }
     const newdata = Object.assign(user, credential.user);
     this.sendVerificationMail();
-    //this.setNewUserData(credential.user);
-    this.setNewUserData(newdata);
+    this.afsu.createOrUpdateUser(newdata);
     this.afsdv.createOrUpdateDataVoluntario(newdata);
   }
   //Sign up for alumno
@@ -86,15 +87,15 @@ export class AuthService {
     }
     const newdata = Object.assign(user, credential.user);
     this.sendVerificationMail();
-    //this.setNewUserData(credential.user);
-    this.setNewUserData(newdata);
+    
+    this.afsu.createOrUpdateUser(newdata);
     this.afsda.createOrUpdateDataAlumno(newdata);
   }
 
   async googleSignin() {
     const provider = new auth.GoogleAuthProvider();
     const credential = await this.afAuth.signInWithPopup(provider);
-    return this.setUserData(credential.user);
+    return this.afsu.setUserData(credential.user);
   }
   // Reset Forggot password
   forgotPassword(passwordResetEmail: any) {
@@ -106,59 +107,6 @@ export class AuthService {
       .catch((error) => {
         window.alert(error);
       });
-  }
-
-  /* Setting up user data when sign in with username/password,
-  sign up with username/password and sign in with social auth
-  provider in Firestore database using AngularFirestore + AngularFirestoreDocument service */
-  setUserData(user:any) {
-    const itemRef: AngularFirestoreDocument<User> = this.afs.doc(`usuarios/${user.uid}`);
-    const userData = {
-      uid: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-      emailVerified: user.emailVerified,
-    };
-    return itemRef.set(userData, { merge: true });
-  }
-
-  doesUserExist(user_uid: string): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      const user = this.afs
-        .doc<User>(`usuarios/${user_uid}`)
-        .snapshotChanges();
-      user.pipe(
-        take(1),
-        map((user) => {
-          if (!!user) {
-            resolve(true);
-          }
-          resolve(false);
-        })
-      );
-    });
-  }
-
-  async setNewUserData(user: any) {
-    /* if( (await this.doesUserExist(user.uid)) ){
-      throw new Error("Existe el usuario");
-    } */
-    const itemRef: AngularFirestoreDocument<User> = this.afs.doc(`usuarios/${user.uid}`);
-    const userData = {
-      uid: user.uid,
-      email: user.email,
-      photoURL: user.photoURL,
-      emailVerified: user.emailVerified,
-      dni: user.dni, // of user input
-      nombres: user.nombres, // of user input
-      apellidos: user.apellidos, // of user input
-      fecha_nacimiento: user.fecha_nacimiento, // of user input
-      numero_celular: user.numero_celular, // of user input
-      fecha_registro: user.metadata.creationTime, // of firebase
-      rol: user.rol,
-      activo: user.activo,
-    };
-    return itemRef.set(userData, { merge: true });
   }
 
   // Send email verfificaiton when new user sign up

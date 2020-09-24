@@ -58,11 +58,13 @@ export class SignupVoluntaryComponent implements OnInit {
 
   ngOnInit(): void {
     this.htp.getHorarios().subscribe(data => { //data will be an array of objects
+      //let keyss = Array.of( data.keys() );
       this.horarios = data.map(e => ({
           id: e.payload.doc.id,
           ...(e.payload.doc.data() as {})
         })
       )
+      //setTimeout(()=> console.log( Object.keys(this.horarios[0])), 2000);
     });
   }
 

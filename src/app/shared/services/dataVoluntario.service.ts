@@ -9,6 +9,14 @@ import {
 export class DataVoluntarioService {
   constructor(private afs: AngularFirestore) {}
 
+  getOneDV(userUID: string){
+    return this.afs.doc(`datos_voluntarios/${userUID}`).snapshotChanges();
+  }
+
+  getAllDV() {
+    return this.afs.collection('datos_voluntarios').snapshotChanges();
+  }
+
   createOrUpdateDataVoluntario( userData : any ){
     const itemRef: AngularFirestoreDocument<any> = this.afs.doc(`datos_voluntarios/${userData.uid}`);
     const dataVol = {
@@ -24,5 +32,9 @@ export class DataVoluntarioService {
       horario_test_psico : userData.horario_test_psico
     }; 
     return itemRef.set(dataVol, { merge: true });
+  }
+
+  deleteDataVoluntario(userUID: string){
+    this.afs.doc(`datos_voluntarios/${userUID}`).delete();
   }
 }
