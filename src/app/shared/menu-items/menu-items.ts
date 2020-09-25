@@ -13,6 +13,7 @@ export interface Menu {
 const MENUITEMS = [
   { state: 'dashboard', name: 'Dashboard', type: 'link', icon: 'av_timer', isForAny: true },
   { state: 'lists', type: 'link', name: 'Lists', icon: 'view_list', belongTo: Roles.ADMIN },
+  { state: 'asesorias', name: 'Asesorias', type: 'link', icon: 'view_list', belongTo: Roles.VOLUNTARIO },
 ];
 
 /**
